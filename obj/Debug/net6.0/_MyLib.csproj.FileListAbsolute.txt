@@ -1,0 +1,12 @@
+Z:\NoobChenProject\MyLib\obj\Debug\net6.0\_MyLib.csproj.AssemblyReference.cache
+Z:\NoobChenProject\MyLib\obj\Debug\net6.0\_MyLib.GeneratedMSBuildEditorConfig.editorconfig
+Z:\NoobChenProject\MyLib\obj\Debug\net6.0\_MyLib.AssemblyInfoInputs.cache
+Z:\NoobChenProject\MyLib\obj\Debug\net6.0\_MyLib.AssemblyInfo.cs
+Z:\NoobChenProject\MyLib\obj\Debug\net6.0\_MyLib.csproj.CoreCompileInputs.cache
+Z:\NoobChenProject\MyLib\bin\Debug\net6.0\_MyLib.deps.json
+Z:\NoobChenProject\MyLib\bin\Debug\net6.0\_MyLib.dll
+Z:\NoobChenProject\MyLib\bin\Debug\net6.0\_MyLib.pdb
+Z:\NoobChenProject\MyLib\obj\Debug\net6.0\_MyLib.dll
+Z:\NoobChenProject\MyLib\obj\Debug\net6.0\refint\_MyLib.dll
+Z:\NoobChenProject\MyLib\obj\Debug\net6.0\_MyLib.pdb
+Z:\NoobChenProject\MyLib\obj\Debug\net6.0\ref\_MyLib.dll
