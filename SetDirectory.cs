@@ -1,4 +1,6 @@
-﻿namespace MyLib
+﻿using String = MyLib.String;
+
+namespace MyLib
 {
     public class SetDirectory
     {
@@ -8,36 +10,37 @@
             if(path == null) { return; }
             SetPath(path);
         }
-        public void AddFolderIfNotExist(string folderName)
+        public void AddFolderIfNotExist(String folderName)
         {
-            if (!Directory.Exists(folderName))
-            {
-                Directory.CreateDirectory(folderName);
-            }            
+            Directory.CreateDirectory($"{Path}\\{folderName}");
         }
-        public void SetPath(string path)
+        public void SetPath(String path)
         {
             Path = path;
         }
-        public bool Exist(string fileName)
+        public bool Exist(String fileName)
         {
-            return Path == null ? false : new FileInfo($"{Path}/{fileName}").Exists;
+            return Path == null ? false : new FileInfo($"{Path}\\{fileName}").Exists;
         }
-        public void WriteText(string fileName, object data)
+        public void WriteText(String fileName, object data)
         {
-            File.WriteAllText($"{Path}/{fileName}", data.ToString());
+            File.WriteAllText($"{Path}\\{fileName}", data.ToString());
         }
-        public void AppendText(string fileName, object data)
+        public void AppendText(String fileName, object data)
         {
-            File.AppendAllText($"{Path}/{fileName}", data.ToString());
+            File.AppendAllText($"{Path}\\{fileName}", data.ToString());
         }
-        public string ReadText(string fileName)
+        public string ReadText(String fileName)
         {
-            return File.ReadAllText($"{Path}/{fileName}");
+            if (!Exist(fileName))
+            {
+                return "";
+            }
+            return File.ReadAllText($"{Path}\\{fileName}");
         }
-        public string LastWriteTime(string fileName)
+        public string LastWriteTime(String fileName)
         {
-            FileInfo info = new FileInfo($"{Path}/{fileName}");
+            FileInfo info = new FileInfo($"{Path}\\{fileName}");
             var t = info.LastWriteTime;
             return Time.ToString(t);
         }

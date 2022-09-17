@@ -2,17 +2,25 @@
 {
     public class PageHelper
     {
-        public List<List<dynamic>> PageList { get; private set; }
-        public PageIterator Page { get; private set; }
-        public Number ItemCount { get; private set; }
+        public int Id { get; set; }
         public int PageSize { get; private set; }
+        public PageIterator Page { get; private set; }
+        public String? EntityNow { get; set; }
+        public List<List<dynamic>> PageList { get; private set; }        
+        public Number ItemCount { get; private set; }        
         private List<dynamic> ToPage()
         {
             return PageList[Page - 1];
         }
+        public void ClearPageInfo()
+        {
+            PageList.Clear();
+            Page=new PageIterator();
+            ItemCount = 0;
+        }
         public PageHelper()
         {
-            SetPageSize(5);
+            SetPageSize(10);
             ItemCount = 0;
             Page = new PageIterator();
             PageList = new List<List<dynamic>>();
@@ -39,23 +47,40 @@
             }
             PageList = new List<List<dynamic>>();
             List<dynamic> itemInPage = new List<dynamic>();
-            foreach (var item in items)
+            bool tried=false;
+            if (!tried)
             {
-                itemInPage.Add(item);
-                if (itemInPage.Count >= PageSize)
+                try
                 {
-                    PageList.Add(itemInPage);
-                    itemInPage = new List<dynamic>();
+                    foreach (var item in items)
+                    {
+                        itemInPage.Add(item);
+                        if (itemInPage.Count >= PageSize)
+                        {
+                            PageList.Add(itemInPage);
+                            itemInPage = new List<dynamic>();
+                        }
+                    }
+                }
+                catch
+                {
+                    tried = true;
                 }
             }
             PageList.Add(itemInPage);
             Page.SetMax(PageList.Count);
         }
-        public void SetPageSize(int pageSize)
+        public void SetPageSize(int? pageSize)
         {
             ItemCount = 0;
-            PageSize = pageSize;
-            PageList = new List<List<dynamic>>();
+            if(pageSize != null)
+            {
+                PageSize = pageSize.Value;
+            }
+            else
+            {
+                PageSize = 10;
+            }
         }
         public List<dynamic> ToPage(int? page)
         {

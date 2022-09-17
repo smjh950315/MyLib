@@ -58,7 +58,6 @@ namespace MyLib
                 FileList.Add(fsi.FullName);
             }
         }
-
         public void WriteFileList(string path)
         {
             foreach(string f in FileList)

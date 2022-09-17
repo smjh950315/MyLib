@@ -123,14 +123,15 @@ namespace MyLib
         public static List<XmlData> ReadXml(string fileName, string tagName)
         {
             string rawData = File.ReadAllText(fileName);
+            String RawData2 = rawData.Split("\n");
             string tagStart = $"<{tagName}";
             string tagEnd = $"</{tagName}>";
             List<XmlData> data = new List<XmlData>();
-            String s = rawData;
+            String s = RawData2;
             var singleDatas = s.SubStrings(tagStart, tagEnd);
             foreach (var singleData in singleDatas)
             {
-                var xml = ReadTab(singleData, tagName);
+                var xml = ReadTab(tagStart + singleData + tagEnd, tagName);
                 if (xml != null) { data.Add(xml); }
             }
             return data;
@@ -144,17 +145,10 @@ namespace MyLib
         }
 
     }
-    public class XmlAttribute
+    public class XmlAttribute : BaseAttribute
     {
-        [Key]
-        public string? Key { get; set; }
-        public string? Value { get; set; }
-        public XmlAttribute() { }
-        public XmlAttribute(string key, string value)
-        {
-            Key = key;
-            Value = value;
-        }
+        public XmlAttribute() : base() { }
+        public XmlAttribute(string key, String value) : base(key, value) { }        
     }
     public class XmlData
     {
@@ -168,27 +162,32 @@ namespace MyLib
                 Attribute.Add(attr);
             }
         }
-        public void AddAttribute(string key, string? value)
+        public void AddAttribute(string key, String? value)
         {
             value ??= "null";
             var a = new XmlAttribute(key, value);
             Attribute.Add(a);
         }
-        public XmlData()
+        public XmlAttribute? GetAttribute(string name)
         {
-            Tag = "tag";
-            Data = "N/A";
-            Attribute = new List<XmlAttribute>();
+            return Attribute.Where(a => a.Key == name).FirstOrDefault();
         }
-        public XmlData(string tag) : this()
+        public XmlData() : this(null, null, null) 
         {
-            Tag = tag;
         }
-        public XmlData(string tag, string data) : this()
+        public XmlData(string tag) : this(tag, null, null) 
         {
-            Tag = tag;
-            Data = data;
+        }
+        public XmlData(string? tag, string? data, params XmlAttribute[]? attributes)
+        {
+            Tag = tag ?? "tag";
+            Data = data ?? "N/A";
+            Attribute = attributes?.ToList() ?? new List<XmlAttribute>();
         }
 
+        public override string ToString()
+        {
+            return Xml.GetString(this);
+        }
     }
 }

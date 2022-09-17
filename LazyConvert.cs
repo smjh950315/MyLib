@@ -45,5 +45,21 @@ namespace MyLib
             return result;
         }
 
+        public static dynamic? TrySomething(dynamic action, dynamic arg)
+        {
+            bool tried = false;
+            if (!tried)
+            {
+                try
+                {
+                    return action(arg);
+                }
+                catch
+                {
+                    tried = true;
+                }
+            }
+            return null;
+        }
     }
 }

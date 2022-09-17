@@ -9,21 +9,36 @@ namespace MyLib
 {
     public class JsonResponseData
     {
-        public string Method { get; set; }
-        public string Item { get; set; }
-        public string Id { get; set; }
+        public bool IsValid { get; set; }
+        public string? Target { get; set; }
+        public string? Method { get; set; }
+        public string? ParamName { get; set; }
+        public string? Id { get; set; }
+        public void CheckValid()
+        {
+            if(Target == null || Method == null)
+            {
+                IsValid=false;
+            }
+            else
+            {
+                IsValid = true;
+            }
+        }
         public JsonResponseData()
         {
+            Target = "";
             Method = "";
-            Item = "";
-            Id = "";
         }
         public JsonResponseData(string rawText)
         {
             String raw = rawText;
-            Method = raw.SubStrings("\"method\":\"", "\"")[0];
-            Item = raw.SubStrings("\"item\":\"", "\"")[0];
-            Id = raw.SubStrings("\"id\":\"", "\"")[0];
-        }
+            Target = raw.SubString("\"target\":\"", "\"");
+            Method = raw.SubString("\"method\":\"", "\"");
+            ParamName = raw.SubString("\"parameter\":\"", "\"");
+            Id = raw.SubString("\"id\":\"", "\"");
+            CheckValid();
+        }  
     }
 }
+//{"Logging":{"LogLevel":{"Default":"Information","Microsoft.AspNetCore":"Warning"}},"AllowedHosts":"*"}

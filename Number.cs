@@ -4,47 +4,120 @@ namespace MyLib
 {
     public class Number
     {
+        private static char[] numbers = new char[] {
+        '0','1','2','3','4','5','6','7','8','9'
+        };
         public double? Value { get; private set; }
         public bool IsNull { get; private set; }
+        public String String { get; private set; }
+        public string @string { get; private set; }
         public ChangeLogger IsChanged { get; set; }
-        private void CheckNull()
+        public static double? TryParse(object? obj)
         {
-            IsNull = Value == null;
+            try
+            {
+                double value = Convert.ToInt64(obj);
+                return value;
+            }
+            catch
+            {
+                return null;
+            }
         }
-        public void Set(double? value)
+        public void SetValue(object? obj)
         {
+            double? value = TryParse(obj);
             if (Value != value)
             {
                 Value = value;
+                String = new(Value);
+                @string = String.ToString();
                 IsChanged = true;
             }
             else
             {
                 IsChanged = false;
             }
-            CheckNull();
+            IsNull = Value == null;
         }
         public Number()
         {
+            String = new String();
+            @string = "";
             IsChanged = false;
             IsNull = true;
         }
-        public Number(double? value)
+        public Number(object? obj) : this()
         {
-            IsChanged = false;
-            IsNull = value == null;
-            Value = (long?)value;
+            SetValue(obj);
         }
-        public Number(long? value)
+        public Number(string? str) : this()
         {
-            IsChanged = false;
-            IsNull = value == null;
-            Value = value;
-        }        
-        public void UseNotNull(params long[] value)
-        {
-            var val = LazyConvert.Value(value);
-            Set(val);
+            if (str == null)
+            {
+                SetValue(null);
+                return;
+            }
+            str = str.Trim();
+            string[] strs = str.Split('.');
+            if (strs.Length > 2)
+            {
+                SetValue(null);
+                return;
+            }
+            if (strs.Length == 2)
+            {
+                string r1 = "";
+                string r2 = "";
+                var s1 = strs[0].Trim();
+                var s2 = strs[1].Trim();
+                for (int i = 0; i < s1.Length; i++)
+                {
+                    foreach (char num in numbers)
+                    {
+                        if (num == s1[i])
+                        {
+                            r1 += num;
+                            break;
+                        }
+                    }
+                }
+                for (int i = 0; i < s2.Length; i++)
+                {
+                    foreach (char num in numbers)
+                    {
+                        if (num == s2[i])
+                        {
+                            r2 += num;
+                            break;
+                        }
+                    }
+                }
+                double d1 = Convert.ToInt64(r1);
+                double d2 = Convert.ToInt64(r1);
+                d2 = d2 / Math.Pow(10, r2.Length);
+                SetValue(d1 + d2);
+                return;
+            }
+            if (strs.Length == 1)
+            {
+                string r1 = "";
+                var s1 = strs[0].Trim();
+                for (int i = 0; i < s1.Length; i++)
+                {
+                    foreach (char num in numbers)
+                    {
+                        if (num == s1[i])
+                        {
+                            r1 += num;
+                            break;
+                        }
+                    }
+                }
+                double d = Convert.ToInt64(r1);
+                SetValue(d);
+                return;
+            }
         }
         public static Number operator +(Number n1, Number n2)
         {
@@ -56,7 +129,7 @@ namespace MyLib
         }
         public static Number operator -(Number n1, Number n2)
         {
-            return new Number(n1.Value - n2);
+            return new Number(n1.Value - n2.Value);
         }
         public static Number operator -(Number n1, long? n2)
         {
@@ -64,7 +137,7 @@ namespace MyLib
         }
         public static Number operator *(Number n1, Number n2)
         {
-            return new Number(n1.Value * n2);
+            return new Number(n1.Value * n2.Value);
         }
         public static Number operator *(Number n1, long? n2)
         {
@@ -72,7 +145,7 @@ namespace MyLib
         }
         public static Number operator /(Number n1, Number n2)
         {
-            return new Number(n1.Value / n2);
+            return new Number(n1.Value / n2.Value);
         }
         public static Number operator /(Number n1, long? n2)
         {
@@ -84,27 +157,31 @@ namespace MyLib
         }
         public static Number operator ^(Number n1, long? n2)
         {
-
             return new Number(Math.Pow(n1, Convert.ToDouble(n2)));
         }
-
+        public static bool operator ==(Number? n1, double? n2)
+        {
+            return n1?.Value == n2;
+        }
+        public static bool operator !=(Number? n1, double? n2)
+        {
+            return n1?.Value != n2;
+        }
         public static implicit operator Number(long? @long)
         {
-            Number n = new Number();
-            n.Set(@long);
-            return n;
+            return new Number(@long);
         }
         public static implicit operator Number(double? @double)
         {
-            Number n = new Number();
-            n.Set(@double);
-            return n;
+            return new Number(@double);
         }
         public static implicit operator Number(int? @int)
         {
-            Number n = new Number();
-            n.Set(@int);
-            return n;
+            return new Number(@int);
+        }
+        public static implicit operator Number(string? str)
+        {
+            return new Number(str);
         }
         public static implicit operator int(Number? n)
         {
@@ -120,6 +197,35 @@ namespace MyLib
         {
             if (n == null) { return 0; }
             return Convert.ToInt64(n.Value);
+        }
+        public static implicit operator string(Number? n)
+        {
+            if (n == null) { return ""; }
+            return n.@string;
+        }
+        public static implicit operator String(Number? n)
+        {
+            if (n == null) { return new String(); }
+            return n.String;
+        }
+        public override string ToString()
+        {
+            return String.ToString();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(obj, null))
+            {
+                return false;
+            }
+
+            throw new NotImplementedException();
         }
     }
 }

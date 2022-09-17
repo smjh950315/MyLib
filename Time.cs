@@ -33,6 +33,11 @@ namespace MyLib
             var Date = DateTime.Now;
             return ToLong(Date);
         }
+        public static string TimeNowString()
+        {
+            var Date = DateTime.Now;
+            return _LongToStr(ToLong(Date));
+        }
         public static long ToLong(DateTime Date)
         {
             return _DateTimeToLong(Date);
